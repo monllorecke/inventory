@@ -5,20 +5,21 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/mbertschler/blocks/html"
-
 	"github.com/mbertschler/inventory/lib/guiapi"
 	"github.com/mbertschler/inventory/parts"
 )
 
 func init() {
-	// setup guiapi action
+	// setup guiapi actions
 	guiapi.DefaultHandler.Functions["searchList"] = searchListAction
 	guiapi.DefaultHandler.Functions["startScan"] = startScanAction
 	guiapi.DefaultHandler.Functions["stopScan"] = stopScanAction
 	guiapi.DefaultHandler.Functions["scanCode"] = scanCodeAction
 	guiapi.DefaultHandler.Functions["clearScan"] = clearScanAction
+	guiapi.DefaultHandler.Functions["newPart"] = newPartAction
 }
 
 func listPage(w http.ResponseWriter, r *http.Request) {
@@ -101,6 +102,10 @@ func clearScanAction(args json.RawMessage) (*guiapi.Result, error) {
 	return guiapi.Replace("#partsList", listOnlyBlock(parts))
 }
 
+func newPartAction(_ json.RawMessage) (*guiapi.Result, error) {
+	return guiapi.Replace("#container", editPartBlock(nil, ""))
+}
+
 func listBlock(parts []*parts.Part, scanning bool) html.Block {
 	return html.Blocks{
 		html.Div(html.Class("ui grid").Id("listControls"),
@@ -117,25 +122,27 @@ func listOnlyBlock(parts []*parts.Part) html.Block {
 	for _, p := range parts {
 		link := fmt.Sprintf("/part/%s", p.ID())
 		list.Add(html.Elem("tr", html.Attr("onclick", "redirect('"+link+"')"),
-			html.Elem("td", nil, html.Text(p.Code)),
-			html.Elem("td", nil, html.Text(p.Name)),
-			html.Elem("td", nil, html.Text(p.Type)),
-			html.Elem("td", nil, html.Text(p.Value)),
-			html.Elem("td", nil, html.Text(p.Size)),
-			html.Elem("td", nil, html.Text(fmt.Sprint(p.Quantity))),
+			html.Elem("td", nil, html.Text(p.Reference)),
+			html.Elem("td", nil, html.Text(fmt.Sprintf("%.2f", p.Weight))),
+			html.Elem("td", nil, html.Text(strconv.Itoa(p.Quantity))),
 			html.Elem("td", nil, html.Text(p.Location)),
+			html.Elem("td", nil, html.Text(p.Supplier)),
+			html.Elem("td", nil, html.Text(p.Dimensions)),
+			html.Elem("td", nil, html.Text(p.Status)),
+			html.Elem("td", nil, html.Text(p.ArrivalDate.Format("2006-01-02 15:04:05"))),
 		))
 	}
 	return html.Elem("table", html.Class("ui celled compact table"),
 		html.Elem("thead", nil,
 			html.Elem("tr", nil,
-				html.Elem("th", nil, html.Text("Code")),
-				html.Elem("th", nil, html.Text("Name")),
-				html.Elem("th", nil, html.Text("Type")),
-				html.Elem("th", nil, html.Text("Value")),
-				html.Elem("th", nil, html.Text("Size")),
+				html.Elem("th", nil, html.Text("Reference")),
+				html.Elem("th", nil, html.Text("Weight")),
 				html.Elem("th", nil, html.Text("Quantity")),
 				html.Elem("th", nil, html.Text("Location")),
+				html.Elem("th", nil, html.Text("Supplier")),
+				html.Elem("th", nil, html.Text("Dimensions")),
+				html.Elem("th", nil, html.Text("Status")),
+				html.Elem("th", nil, html.Text("Arrival Date")),
 			),
 		), html.Elem("tbody", nil,
 			list,

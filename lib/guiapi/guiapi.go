@@ -19,8 +19,7 @@ var DefaultHandler = Handler{
 func Replace(selector string, block html.Block) (*Result, error) {
 	out, err := html.RenderString(block)
 	if err != nil {
-		return nil, err
-	}
+		return nil, err}
 	ret := &Result{
 		HTML: []HTMLUpdate{
 			{

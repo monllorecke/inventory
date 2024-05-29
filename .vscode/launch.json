@@ -1,0 +1,40 @@
+// Use IntelliSense para saber los atributos posibles.
+// Mantenga el puntero para ver las descripciones de los existentes atributos.
+// Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Inventory App",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "/Users/nachomonllor/Desktop/INVENTARIO_APP/inventory/main.go",
+            "args": ["/Users/nachomonllor/Desktop/INVENTARIO_APP/inventory/inventory.db"],
+            "env": {},
+            "buildFlags": "-gcflags 'all=-N -l'",
+            "cwd": "/Users/nachomonllor/Desktop/INVENTARIO_APP/inventory"
+        },
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "chrome",
+            "url": "http://localhost:5080",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "Depurador de Python: Archivo actual",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Launch Package",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${fileDirname}"
+        }
+    ]
+}

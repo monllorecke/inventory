@@ -30,21 +30,21 @@ func (r Ref) ID() string {
 // Part is the central item in the inventory.
 type Part struct {
 	Ref
-	Code     string
-	Name     string
-	Serial   string
-	Type     string
-	Value    string
-	Size     string
-	Quantity int
-	Location string
-	Parent   string
-
-	Supplier string
-	Price    int
-	Delivery int
-
-	Values map[string]string
+	ArrivalDate  time.Time `json:"arrival_date"`
+	Weight       float64   `json:"weight"`
+	Reference    string    `json:"reference"`
+	Quantity     int       `json:"quantity"`
+	Location     string    `json:"location,omitempty"`
+	Supplier     string    `json:"supplier,omitempty"`
+	Dimensions   string    `json:"dimensions,omitempty"`
+	Status       string    `json:"status"`
+	Name         string    `json:"name,omitempty"`
+	Type         string    `json:"type,omitempty"`
+	Value        string    `json:"value,omitempty"`
+	Serial       string    `json:"serial,omitempty"`
+	Parent       string    `json:"parent,omitempty"`
+	Price        int       `json:"price,omitempty"`
+	Delivery     int       `json:"delivery,omitempty"`
 }
 
 // SetupDB opens the database.
@@ -75,14 +75,12 @@ func Search(query string) ([]*Part, error) {
 	query = strings.ToLower(query)
 	filter := func(p *Part) bool {
 		s := []string{
-			p.Code,
-			p.Name,
-			p.Serial,
-			p.Type,
-			p.Value,
-			p.Size,
+			p.Reference,
 			p.Location,
 			p.Supplier,
+			p.Name,
+			p.Type,
+			p.Value,
 		}
 		for _, e := range s {
 			e = strings.ToLower(e)
